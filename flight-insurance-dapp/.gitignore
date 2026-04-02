@@ -1,0 +1,17 @@
+# Python
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+venv/
+env/
+.venv/
+
+# SQLite Veritabanı
+*.db
+*.sqlite3
+insurance_database.db
+
+# OS
+.DS_Store
+Thumbs.db

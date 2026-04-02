@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SmarTravel - Flight Delay Insurance</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="background-shapes">
+        <div class="shape shape-1"></div>
+        <div class="shape shape-2"></div>
+        <div class="shape shape-3"></div>
+    </div>
+
+    <div class="container">
+        <header>
+            <h1><span>Flight Delay Insurance</span></h1>
+        </header>
+
+        <main>
+            <div class="glass-panel form-panel">
+                <h2>Create New Policy</h2>
+                <form id="insuranceForm">
+                    <div class="input-group">
+                        <label for="flightNumber">Flight Number</label>
+                        <input type="text" id="flightNumber" placeholder="TK1234" required>
+                    </div>
+                    <div class="input-group">
+                        <label for="customerId">National ID / Passport No</label>
+                        <input type="text" id="customerId" placeholder="11122233344" required>
+                    </div>
+                    <div class="input-group">
+                        <label for="phoneNumber">Phone Number</label>
+                        <input type="tel" id="phoneNumber" placeholder="+905554443322" required>
+                    </div>
+                     <div class="input-group">
+                        <label for="coverageAmount">Coverage Amount (ETH)</label>
+                        <input type="number" id="coverageAmount" step="0.01" min="0.01" value="0.5" required>
+                    </div>
+                    <div class="input-group">
+                        <label for="walletAddress">Wallet Address for Payout (ETH Address)</label>
+                        <input type="text" id="walletAddress" placeholder="0x..." value="0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266" required>
+                    </div>
+                    <button type="submit" class="btn primary-btn" id="submitBtn">Purchase Insurance</button>
+                </form>
+                <div id="formMessage" class="message hidden"></div>
+            </div>
+
+            <div class="glass-panel list-panel">
+                <div class="panel-header">
+                    <h2>Active Policies</h2>
+                    <button id="triggerOracleBtn" class="btn secondary-btn">🔄 Trigger Oracle Check</button>
+                </div>
+                <div class="table-container">
+                    <table id="policiesTable">
+                        <thead>
+                            <tr>
+                                <th>Policy ID</th>
+                                <th>Flight No</th>
+                                <th>ID No</th>
+                                <th>Coverage</th>
+                                <th>Status</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <!-- Data will be populated via JS -->
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <script src="app.js"></script>
+</body>
+</html>
