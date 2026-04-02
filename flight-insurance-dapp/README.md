@@ -14,14 +14,14 @@
 
 ---
 
-## 🎯 Projenin Amacı (Overview)
-Bu proje, yolcuların uçuş gecikmelerine veya iptallerine karşı **Ethereum** (Kripto para) teminatlı akıllı sözleşmeler aracılığıyla sigorta alabilmelerini sağlayan hibrit bir Web3/Web2 uygulamasıdır. Uçuşunuz rötar yaparsa, akıllı sözleşme insani onaya (ve bürokrasiye) gerek kalmadan poliçe bedelini anında cüzdanınıza iade eder!
+## 🎯 Overview
+This project is a hybrid Web3/Web2 application that allows passengers to purchase decentralized insurance against flight delays and cancellations using **Ethereum** smart contracts. If a flight is delayed or cancelled, the smart contract automatically refunds the policy amount directly to your wallet—without human bureaucracy or approval delays!
 
 ---
 
-## ⚙️ Sistem Mimarisi & Topoloji
+## ⚙️ System Architecture & Topology
 
-Aşağıdaki topoloji, Web2 arayüzleriyle Web3 (Blockchain) ve Dış Servis (Oracle) bileşenlerinin nasıl uçtan uca haberleştiğini gösterir:
+The topology below demonstrates how Web2 interfaces seamlessly communicate with Web3 (Blockchain) and External Services (Oracle):
 
 ```mermaid
 graph TD
@@ -55,32 +55,32 @@ graph TD
 
 ---
 
-## 🛠️ Nasıl Çalışır? (İş Akışı)
+## 🛠️ How It Works (Workflow)
 
-Sistem mimarisi, *satın alma* ve *tazminat ödeme* olmak üzere iki ana faza ayrılmıştır:
+The system functionality is divided into two primary phases: *Purchasing* and *Payouts*:
 
 ```mermaid
 flowchart LR
-    subgraph Faz 1: Satın Alma ve Bekleme
+    subgraph Phase 1: Purchase and Wait
     direction LR
-        A(["👤 Müşteri Poliçe Alır"]) --> B["💾 DB'ye Kaydedilir"]
-        B --> C["📜 Blockchain'de Sözleşme Açılır"]
-        C --> D(["⏳ Uçuş Saati Beklenir"])
+        A(["👤 User Purchases Policy"]) --> B["💾 Backend saves to DB"]
+        B --> C["📜 Create Smart Contract Record"]
+        C --> D(["⏳ Wait for Flight Time"])
     end
 
-    subgraph Faz 2: Oracle Kontrolü ve Ödeme
+    subgraph Phase 2: Oracle Check and Payout
     direction LR
-        E["📡 Oracle Tetiklenir"] --> F{"✈️ Rötar veya İptal mi?"}
+        E["📡 Trigger Oracle Check"] --> F{"✈️ Delayed or Cancelled?"}
         
-        F -- "Evet" --> G["💸 Akıllı Sözleşme ETH Gönderir"]
-        G --> H["📱 Müşteriye SMS Gider"]
-        H --> I["🔄 Poliçe 'Ödendi' Olur"]
+        F -- "Yes" --> G["💸 Smart Contract Transfers ETH"]
+        G --> H["📱 Send SMS Notification"]
+        H --> I["🔄 Policy Status set to 'Paid'"]
         
-        F -- "Hayır" --> K["✅ Uçuş Zamanında"]
-        K --> L(["⛔ İşlem Tamam (Aksiyon Yok)"])
+        F -- "No" --> K["✅ Flight is On-Time"]
+        K --> L(["⛔ Process Completed (No Action)"])
     end
 
-    D -->|"Zamanı Gelince"| E
+    D -->|"Time Elapses"| E
 
     classDef highlight fill:#e1f5fe,stroke:#03a9f4,stroke-width:2px;
     classDef decision fill:#fff3e0,stroke:#ff9800,stroke-width:2px;
@@ -90,29 +90,29 @@ flowchart LR
 
 ---
 
-## 🚀 Kurulum & Çalıştırma Yönergesi
+## 🚀 Installation & Usage Guide
 
-### 1️⃣ Backend'i Başlatmak
-Terminalden proje dizinindeki **backend** klasörüne geçin ve sanal ortamı aktif ettikten sonra Uvicorn'u başlatın:
+### 1️⃣ Starting the Backend
+From the project root directory, navigate to the **backend** folder, activate your virtual environment, and start the Uvicorn server:
 ```bash
-# Sanal Ortam Aktifleştirme (Windows)
+# Activate Virtual Environment (Windows)
 ..\venv\Scripts\activate
 
-# Backend sunucusunu başlatma
+# Start the Backend Server
 uvicorn app:app --reload
 ```
-> 💡 API sunucusu `http://localhost:8000` adresinde ayağa kalkacak ve **Solidity akıllı sözleşmesi otomatik olarak derlenip** yerel ağda (EthTester) oluşturulacaktır.
+> 💡 *The API server will run at `http://localhost:8000`. The **Solidity smart contract will automatically compile** and deploy to the local Ethereum test network (EthTester).*
 
-### 2️⃣ Frontend'i Çalıştırmak
-Yeni bir terminal açın ve genel kök dizinden **frontend** klasörüne geçin:
+### 2️⃣ Starting the Frontend
+Open a new terminal session, navigate to the **frontend** folder from the root directory:
 ```bash
 cd frontend
 python -m http.server 8080
 ```
-> 🌐 Tarayıcınızdan `http://localhost:8080` adresine giderek dApp (Kullanıcı Paneli) arayüzünü görüntüleyebilir ve hemen poliçe satın alabilirsiniz.
+> 🌐 *Visit `http://localhost:8080` in your browser to view the dApp User Interface and start purchasing policies.*
 
 ---
 
-## 🔒 Güvenlik & İşlem Maliyeti Mimarisi
-* Müşteriye ait veriler (telefon, işlem durumu vb.) işlem maliyetini artırmamak için **SQLite** veritabanında Off-Chain olarak tutulur.
-* Finansal kilit işlemleri, teminat tutarları ve parayı serbest bırakma mantığı ise sadece manipüle edilemeyen **On-Chain (Ethereum Sözleşmesi)** üzerinde şeffaf bir şekilde gerçekleşir. 
+## 🔒 Security & Optimization Strategy
+* Customer data (phone numbers, status, etc.) is kept securely Off-Chain in a **SQLite** database to prevent unnecessary transaction (Gas) costs.
+* Financial locks, collateral logic, and fund release mechanisms are strictly maintained on **On-Chain (Ethereum Contracts)** ensuring the policy payout architecture is transparent and robust.
