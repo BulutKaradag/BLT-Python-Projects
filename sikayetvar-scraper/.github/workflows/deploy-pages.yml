@@ -1,0 +1,38 @@
+name: 📊 GitHub Pages Dashboard Export
+
+on:
+  push:
+    branches: [main, master]
+    paths:
+      - 'data/sikayetler.json'
+      - 'docs/export_for_github.py'
+  workflow_dispatch:   # Manuel tetikleme
+
+permissions:
+  contents: write
+
+jobs:
+  export:
+    runs-on: ubuntu-latest
+    steps:
+      - name: ⬇️ Checkout
+        uses: actions/checkout@v4
+
+      - name: 🐍 Python Kurulum
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+
+      - name: 📦 Bağımlılıklar
+        run: pip install tinydb
+
+      - name: 🔨 Dashboard HTML Oluştur
+        run: python docs/export_for_github.py
+
+      - name: 📤 Değişiklikleri Commit Et
+        run: |
+          git config user.name  "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git add docs/index.html docs/.nojekyll
+          git diff --staged --quiet || git commit -m "🤖 Dashboard güncellendi [skip ci]"
+          git push
